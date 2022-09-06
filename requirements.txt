@@ -1,1 +1,5 @@
 fastapi==0.82.0
+uvicorn==0.17.6
+click==8.0.3
+h11==0.13.0
+asgiref==3.5.2
