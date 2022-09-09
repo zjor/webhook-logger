@@ -3,3 +3,4 @@ uvicorn==0.17.6
 click==8.0.3
 h11==0.13.0
 asgiref==3.5.2
+psycopg2-binary==2.9.3

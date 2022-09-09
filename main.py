@@ -1,15 +1,18 @@
+import db
+import json
 from fastapi import FastAPI
-from collections import defaultdict
 
 app = FastAPI()
 
-storage = defaultdict(list)
+conn = db.get_connection()
+
 
 @app.get("/api/{entity}")
 async def list_entities(entity: str):
-    return storage[entity]
+    return db.find_all_by_name(conn, entity, timestamp_asc=False)
+
 
 @app.post("/api/{entity}")
-async def post_entitity(entity: str, payload: dict):
-    storage[entity].append(payload)
-    return payload
+async def post_entity(entity: str, payload: dict):
+    _id = db.save_payload(conn, entity, json.dumps(payload))
+    return db.find_by_id(conn, _id)
