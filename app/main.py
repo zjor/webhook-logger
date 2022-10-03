@@ -39,7 +39,7 @@ async def list_entities(entity: str, limit: int = None):
 
 
 @app.get("/api/{entity}/{_id}")
-async def list_entities(entity: str, _id: str):
+async def get_entity_by_id(entity: str, _id: str):
     obj = db.find_by_id(conn, _id)
     if obj and obj['name'] == entity:
         return obj
