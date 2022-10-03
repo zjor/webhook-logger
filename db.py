@@ -71,6 +71,8 @@ def update_schema():
 
 
 def row_to_dict(row):
+    if not row:
+        return None
     return {
         'id': row[0],
         'name': row[1],
@@ -97,9 +99,15 @@ def find_by_id(conn, _id):
         return row_to_dict(cursor.fetchone())
 
 
-def find_all_by_name(conn, name, timestamp_asc: bool = False):
+def find_all_by_name(conn, name, limit: int = None, timestamp_asc: bool = False):
     order_dir = 'ASC' if timestamp_asc else 'DESC'
-    query = f"SELECT id, \"name\", payload, headers, \"timestamp\" FROM entities WHERE \"name\" = '{name}' ORDER BY \"timestamp\" {order_dir}"
+    query = f"""
+        SELECT id, \"name\", payload, headers, \"timestamp\" 
+        FROM entities WHERE \"name\" = '{name}' 
+        ORDER BY \"timestamp\" {order_dir}
+    """
+    if limit:
+        query += f" LIMIT {limit}"
     result = []
     with conn.cursor() as cursor:
         cursor.execute(query)

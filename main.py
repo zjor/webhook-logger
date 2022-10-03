@@ -1,6 +1,6 @@
 import db
 import json
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import FileResponse
 
 app = FastAPI()
@@ -29,8 +29,17 @@ async def favicon():
 
 
 @app.get("/api/{entity}")
-async def list_entities(entity: str):
-    return db.find_all_by_name(conn, entity, timestamp_asc=False)
+async def list_entities(entity: str, limit: int = None):
+    return db.find_all_by_name(conn, entity, limit, timestamp_asc=False)
+
+
+@app.get("/api/{entity}/{_id}")
+async def list_entities(entity: str, _id: str):
+    obj = db.find_by_id(conn, _id)
+    if obj and obj['name'] == entity:
+        return obj
+    else:
+        raise HTTPException(status_code=404, detail=f"{entity} with {_id} was not found")
 
 
 @app.post("/api/{entity}")
