@@ -6,6 +6,13 @@ TODO
 ## API Reference
 TODO
 
+## How to
+
+### Run dockerized version locally
+
+1. `docker build -t webhook-logger .`
+2. `docker run --rm -e DATABASE_URL=$DATABASE_URL -p 8000:8000 webhook-logger`
+
 ## TODO
 - [x] store headers
 - [x] add get entity by ID endpoint

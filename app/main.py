@@ -1,4 +1,4 @@
-import db
+from app import db
 import json
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import FileResponse
