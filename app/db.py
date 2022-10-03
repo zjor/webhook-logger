@@ -124,14 +124,14 @@ def get_schema_version(conn) -> int:
         return c.fetchone()[0]
 
 
-def get_names_count(conn) -> int:
+def get_total_count(conn) -> int:
     query = "SELECT count(*) FROM entities"
     with conn.cursor() as c:
         c.execute(query)
         return c.fetchone()[0]
 
 
-def get_total_count(conn) -> int:
+def get_names_count(conn) -> int:
     query = """
     SELECT count(*) FROM 
         (SELECT DISTINCT "name" FROM entities) t
