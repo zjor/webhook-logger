@@ -11,7 +11,8 @@ SCHEMA_VERSION = 3
 
 def get_connection():
     DATABASE_URL = os.environ['DATABASE_URL']
-    return psycopg2.connect(DATABASE_URL, sslmode='require', options='-c statement_timeout=10000')
+    ssl_mode = os.environ.get('SSL_MODE', 'require')
+    return psycopg2.connect(DATABASE_URL, sslmode=ssl_mode, options='-c statement_timeout=10000')
 
 
 def should_run_migration():
@@ -114,6 +115,30 @@ def find_all_by_name(conn, name, limit: int = None, timestamp_asc: bool = False)
         for row in cursor.fetchall():
             result.append(row_to_dict(row))
     return result
+
+
+def get_schema_version(conn) -> int:
+    query = 'SELECT "version" FROM schema_version'
+    with conn.cursor() as c:
+        c.execute(query)
+        return c.fetchone()[0]
+
+
+def get_names_count(conn) -> int:
+    query = "SELECT count(*) FROM entities"
+    with conn.cursor() as c:
+        c.execute(query)
+        return c.fetchone()[0]
+
+
+def get_total_count(conn) -> int:
+    query = """
+    SELECT count(*) FROM 
+        (SELECT DISTINCT "name" FROM entities) t
+    """
+    with conn.cursor() as c:
+        c.execute(query)
+        return c.fetchone()[0]
 
 
 if __name__ == "__main__":

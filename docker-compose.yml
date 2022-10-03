@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:10.6-alpine
+    environment:
+      POSTGRES_DB: webhook-logger
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: s3cr3t
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgres://test:s3cr3t@db:5432/webhook-logger
+      SSL_MODE: allow
+    depends_on:
+      - db

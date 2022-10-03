@@ -19,7 +19,12 @@ async def index():
         'title': 'Webhook Logger',
         'swagger-ui': '/docs',
         'redoc': '/redoc',
-        'example': '/api/example'
+        'example': '/api/example',
+        'schemaVersion': db.get_schema_version(conn),
+        'stats': {
+            'namesCount': db.get_names_count(conn),
+            'total': db.get_total_count(conn)
+        }
     }
 
 
